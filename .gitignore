@@ -31,3 +31,8 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+
+# env file
+.env
+node_modules/
+app/dst/

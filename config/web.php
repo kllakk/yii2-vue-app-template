@@ -2,16 +2,22 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$formatter = require __DIR__ . '/formatter.php';
 
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'ru-RU',
+    'sourceLanguage'=>'en-EN',
+    'timeZone' => 'Europe/Moscow',
+    'charset' => 'utf-8',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'formatter' => $formatter,
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'bS3Y2Ac6Y-JYLc7iWGJ0sG3efocIJnbn',
@@ -51,6 +57,21 @@ $config = [
             ],
         ],
         */
+        'assetManager' => [
+            //'baseUrl' => (getenv('STATIC_HOST') ?: 'localhost') . '/assets',
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'js' => [
+                        YII_ENV_DEV ? 'jquery.js' : 'jquery.min.js'
+                    ]
+                ],
+                'bsDependencyEnabled' => false,
+                'yii\bootstrap\BootstrapAsset' => false,
+                'yii\bootstrap\BootstrapPluginAsset' => false,
+                'yii\bootstrap4\BootstrapAsset' => false,
+                'yii\bootstrap4\BootstrapPluginAsset' => false,
+            ],
+        ],
     ],
     'params' => $params,
 ];
@@ -61,7 +82,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['*'],
     ];
 
     $config['bootstrap'][] = 'gii';
