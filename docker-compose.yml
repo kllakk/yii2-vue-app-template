@@ -2,8 +2,41 @@ version: '2'
 services:
   php:
     image: yiisoftware/yii2-php:7.4-apache
+    environment:
+      - PHP_ENABLE_XDEBUG=1
+      - PHP_IDE_CONFIG=serverName=localhost
     volumes:
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
       - ./:/app:delegated
     ports:
-      - '8090:80'
+      - '80:80'
+      
+  mysql:
+    image: mysql:5.7
+#    ports:
+#      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=yiisoftware
+      - MYSQL_USER=yiisoftware
+      - MYSQL_PASSWORD=yiisoftware
+    volumes:
+      - "./runtime/.mysql:/var/lib/mysql"
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    
+  adminer:
+    image: adminer
+    links:
+      - mysql:db
+    ports:
+      - '8080:8080'
+    environment:
+      MYSQL_ROOT_PASSWORD:
+    depends_on:
+      - mysql
+      
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
